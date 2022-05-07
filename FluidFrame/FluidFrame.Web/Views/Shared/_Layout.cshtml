@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fluid Frame</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -29,6 +29,7 @@
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="FrameType" asp-action="Index">Frame Types</a>
                                 </div>
                         </li>
                     </ul>
@@ -49,7 +50,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - FluidFrame
+            &copy; 2022 - Fluid Frame
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

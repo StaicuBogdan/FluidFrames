@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluidFrame.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace FluidFrame.DataAccess.Repository.IRepository
 {
-    public interface IUnitOfWork
+    public interface IFrameTypeRepository : IRepository<FrameType>
     {
-        ICategoryRepository Category { get; }
-        IFrameTypeRepository FrameType { get; }
-        void Save();
+        void Update(FrameType obj);
     }
 }
