@@ -18,7 +18,10 @@
     <thead>
         <tr>
             <th>
-                Frame Type Name
+                Frame Type
+            </th>
+            <th>
+                Description
             </th>
             <th></th>
         </tr>
@@ -27,8 +30,11 @@
         @foreach(var obj in Model)
         {
             <tr>
-                <td width="70%">
+                <td width="35%">
                     @obj.Name
+                </td>
+                <td width="40%">
+                    @obj.Description
                 </td>
                 <td>
                     <div class="w-100 btn-group" role="group">

@@ -25,7 +25,7 @@
                 Category Name
             </th>
             <th>
-                Created Date
+                Description
             </th>
             <th></th>
         </tr>
@@ -34,11 +34,11 @@
         @foreach(var obj in Model)
         {
             <tr>
-                <td width="40%">
+                <td width="35%">
                     @obj.Name
                 </td>
-                <td width="35%">
-                    @obj.CreatedDateTime.ToShortDateString()
+                <td width="40%">
+                    @obj.Description
                 </td>
                 <td>
                     <div class="w-100 btn-group" role="group">
