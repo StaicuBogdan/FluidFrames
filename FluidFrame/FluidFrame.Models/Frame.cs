@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace FluidFrame.Models
 {
@@ -11,6 +12,7 @@ namespace FluidFrame.Models
         public string ModelName { get; set; }
         [Required]
         public string OwnerPhoneNumber { get; set; }
+        [ValidateNever]
         public string ImageUrl { get; set; }
         [Required]
         public double Latitude { get; set; }
@@ -20,17 +22,23 @@ namespace FluidFrame.Models
 
         [Required]
         [Range(1, 99999)]
+        [Display(Name = "Price for one day")]
         public double Price { get; set; }
         [Required]
         [Range(1, 99999)]
+        [Display(Name = "Price for 1 week")]
         public double Price7Days { get; set; }
 
         [Required]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
+        [ValidateNever]
         public Category Category { get; set; }
 
         [Required]
+        [Display(Name = "Frame Type")]
         public int FrameTypeId { get; set; }
+        [ValidateNever]
         public FrameType FrameType { get; set; }
     }
 }

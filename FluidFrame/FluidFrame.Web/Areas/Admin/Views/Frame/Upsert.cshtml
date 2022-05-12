@@ -1,0 +1,126 @@
+﻿@model FluidFrame.Models.ViewModels.FrameViewModel
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <input hidden asp-for="Frame.Id" />
+    <input hidden asp-for="Frame.ImageUrl" />
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">
+                        @(Model.Frame.Id!=0? "Update": "Create") Frame
+                    </h2>
+                    <hr />
+                </div>
+                @*<div asp-validation-summary="All"></div>*@
+
+                <div class="mb-3">
+                    <label asp-for="Frame.ModelName"></label>
+                    <input asp-for="Frame.ModelName" class="form-control" />
+                    <span asp-validation-for="Frame.ModelName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Frame.Description"></label>
+                    <textarea asp-for="Frame.Description" rows="3" class="form-control"></textarea>
+                    <span asp-validation-for="Frame.Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.OwnerPhoneNumber"></label>
+                    <input asp-for="Frame.OwnerPhoneNumber" class="form-control" />
+                    <span asp-validation-for="Frame.OwnerPhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.Price"></label>
+                    <input asp-for="Frame.Price" class="form-control" />
+                    <span asp-validation-for="Frame.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.Price7Days"></label>
+                    <input asp-for="Frame.Price7Days" class="form-control" />
+                    <span asp-validation-for="Frame.Price7Days" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.Latitude"></label>
+                    <input asp-for="Frame.Latitude" class="form-control" />
+                    <span asp-validation-for="Frame.Latitude" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.Longitude"></label>
+                    <input asp-for="Frame.Longitude" class="form-control" />
+                    <span asp-validation-for="Frame.Longitude" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Frame.ImageUrl"></label>
+                    <input type="file" id="uploadBox" name="file" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.CategoryId"></label>
+                    <select asp-for="Frame.CategoryId" asp-items="@Model.CategoryList" class="form-control">
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <span asp-validation-for="Frame.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Frame.FrameTypeId"></label>
+                    <select asp-for="Frame.FrameTypeId" asp-items="@Model.FrameTypeList" class="form-control">
+                        <option disabled selected>--Select Cover Type--</option>
+                    </select>
+                    <span asp-validation-for="Frame.FrameTypeId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    @if (Model.Frame.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-success" style="width:150px">
+                            Update
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" onclick="return ValidateInput()" class="btn btn-success" style="width:150px">
+                            Create
+                        </button>
+                    }
+
+                    <a asp-controller="Frame" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pt-4">
+            <img src="@Model.Frame.ImageUrl" width="100%"
+                 style="border-radius:5px; border: 1px solid #bbb9b9" />
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
+      toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+      toolbar_mode: 'floating',
+      tinycomments_mode: 'embedded',
+      tinycomments_author: 'Author name',
+    });
+</script>
+<script>
+    function ValidateInput(){
+        if(document.getElementById("uploadBox").value ==""){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please upload an Image!'
+            });
+            return false;
+        }
+        return true;
+    }
+</script>
+}
