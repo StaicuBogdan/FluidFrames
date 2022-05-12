@@ -14,7 +14,8 @@ namespace FluidFrame.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [DisplayName("Created Date Time")]
-        public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+        [Required]
+        [DisplayName("Category Description")]
+        public string Description { get; set; }
     }
 }

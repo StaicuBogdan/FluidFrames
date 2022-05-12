@@ -10,6 +10,7 @@ namespace FluidFrame.DataAccess.Repository.IRepository
     {
         ICategoryRepository Category { get; }
         IFrameTypeRepository FrameType { get; }
+        IFrameRepository Frame { get; }
         void Save();
     }
 }

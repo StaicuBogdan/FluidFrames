@@ -17,5 +17,6 @@ namespace FluidFrame.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<FrameType> FrameTypes { get; set; }
+        public DbSet<Frame> Frames { get; set; }
     }
 }
