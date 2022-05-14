@@ -14,6 +14,7 @@ namespace FluidFrame.DataAccess.Repository
         public ICategoryRepository Category { get; private set; }
         public IFrameTypeRepository FrameType { get; private set; }
         public IFrameRepository Frame { get; private set; }
+        public ICompanyRepository Company { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -21,6 +22,7 @@ namespace FluidFrame.DataAccess.Repository
             Category = new CategoryRepository(_db);
             FrameType = new FrameTypeRepository(_db);
             Frame = new FrameRepository(_db);
+            Company = new CompanyRepository(_db);
         }
 
         public void Save()

@@ -51,7 +51,7 @@ namespace FluidFrame.Web.Areas.Admin.Controllers
             }
             else
             {
-                // update product otherwise
+                // update frame otherwise
                 frameVM.Frame = _unitOfWork.Frame.GetFirstOrDefault(i => i.Id == id);
                 return View(frameVM);
             }
