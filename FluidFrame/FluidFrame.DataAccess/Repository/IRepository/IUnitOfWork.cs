@@ -12,6 +12,8 @@ namespace FluidFrame.DataAccess.Repository.IRepository
         IFrameTypeRepository FrameType { get; }
         IFrameRepository Frame { get; }
         ICompanyRepository Company { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         void Save();
     }
 }
