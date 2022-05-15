@@ -15,6 +15,8 @@ namespace FluidFrame.DataAccess.Repository
         public IFrameTypeRepository FrameType { get; private set; }
         public IFrameRepository Frame { get; private set; }
         public ICompanyRepository Company { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IShoppingCartRepository ShoppingCart { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -23,6 +25,8 @@ namespace FluidFrame.DataAccess.Repository
             FrameType = new FrameTypeRepository(_db);
             Frame = new FrameRepository(_db);
             Company = new CompanyRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
         }
 
         public void Save()

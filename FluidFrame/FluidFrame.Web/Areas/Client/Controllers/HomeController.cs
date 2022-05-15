@@ -1,7 +1,9 @@
 ﻿using FluidFrame.DataAccess.Repository.IRepository;
 using FluidFrame.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace FluidFrame.Web.Controllers
 {
@@ -23,14 +25,31 @@ namespace FluidFrame.Web.Controllers
             return View(frames);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(int frameId)
         {
             ShoppingCart cart = new()
             {
-                Frame = _unitOfWork.Frame.GetFirstOrDefault(x => x.Id == id, includeProperties: "FrameType,Category"),
+                Frame = _unitOfWork.Frame.GetFirstOrDefault(x => x.Id == frameId, includeProperties: "FrameType,Category"),
+                FrameId = frameId,
                 Count = 1
             };
             return View(cart);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Details(ShoppingCart cart)
+        {
+            // extragem id-ul user-ului din Claims
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            cart.ApplicationUserId = claim.Value;
+
+            _unitOfWork.ShoppingCart.Add(cart);
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
