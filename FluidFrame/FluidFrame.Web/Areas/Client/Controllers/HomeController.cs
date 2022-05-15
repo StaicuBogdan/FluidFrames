@@ -46,7 +46,17 @@ namespace FluidFrame.Web.Controllers
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             cart.ApplicationUserId = claim.Value;
 
-            _unitOfWork.ShoppingCart.Add(cart);
+            ShoppingCart cartDb = _unitOfWork.ShoppingCart.GetFirstOrDefault(
+                u => u.ApplicationUserId == claim.Value && u.FrameId == cart.FrameId);
+
+            if (cartDb == null)
+            {
+                _unitOfWork.ShoppingCart.Add(cart);
+            }
+            else
+            {
+                _unitOfWork.ShoppingCart.IncrementCount(cartDb, cart.Count);
+            }
             _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
