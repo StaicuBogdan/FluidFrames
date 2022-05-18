@@ -4,6 +4,7 @@ using FluidFrame.Models.ViewModels;
 using FluidFrame.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace FluidFrame.Web.Areas.Client.Controllers
@@ -117,9 +118,62 @@ namespace FluidFrame.Web.Areas.Client.Controllers
                 _unitOfWork.Save();
             }
 
-            _unitOfWork.ShoppingCart.RemoveRange(cartViewModel.CartItemsList);
+            #region Stripe Settings
+            var domain = "https://localhost:44320/";
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain + $"client/shoppingcart/ConfirmCampaign?id={cartViewModel.Campaign.Id}",
+                CancelUrl = domain + "client/shoppingcart/index",
+            };
+
+            foreach(var cartItem in cartViewModel.CartItemsList)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(cartItem.Price * 100), //20.00 -> 2000 (cents)
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = cartItem.Frame.ModelName,
+                        },
+                    },
+                    Quantity = cartItem.Count,
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            _unitOfWork.Campaign.UpdateStripePaymentId(cartViewModel.Campaign.Id, session.Id, session.PaymentIntentId);
             _unitOfWork.Save();
-            return RedirectToAction("Index", "Home");
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+
+            #endregion
+        }
+
+        public IActionResult ConfirmCampaign(int id)
+        {
+            Campaign campaign = _unitOfWork.Campaign.GetFirstOrDefault(u => u.Id == id);
+            
+            var service = new SessionService();
+            Session session = service.Get(campaign.SessionId);
+            // verific statusul din stripe
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.Campaign.UpdateStatus(id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
+                _unitOfWork.Save();
+            }
+
+            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == campaign.ApplicationUserId).ToList();
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            _unitOfWork.Save();
+            return View(id);
         }
 
         public IActionResult Plus(int cartId)
@@ -161,7 +215,7 @@ namespace FluidFrame.Web.Areas.Client.Controllers
                 return price;
             }
 
-            return priceWeek;
+            return priceWeek/7;
 
         }
     }

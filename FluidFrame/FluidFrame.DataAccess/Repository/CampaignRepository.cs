@@ -22,5 +22,25 @@ namespace FluidFrame.DataAccess.Repository
         {
             _db.Campaigns.Update(obj);
         }
+
+        public void UpdateStatus(int id, string campaignStatus, string? paymentStatus = null)
+        {
+            var campaignFromDb = _db.Campaigns.FirstOrDefault(u => u.Id == id);
+            if (campaignFromDb != null)
+            {
+                campaignFromDb.CampaignStatus = campaignStatus;
+                if (paymentStatus != null)
+                {
+                    campaignFromDb.PaymentStatus = paymentStatus;
+                }
+            }
+        }
+
+        public void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId)
+        {
+            var campaignFromDb = _db.Campaigns.FirstOrDefault(u => u.Id == id);
+            campaignFromDb.SessionId = sessionId;
+            campaignFromDb.PaymentIntentId = paymentIntentId;
+        }
     }
 }
