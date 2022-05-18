@@ -17,6 +17,8 @@ namespace FluidFrame.DataAccess.Repository
         public ICompanyRepository Company { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
         public IShoppingCartRepository ShoppingCart { get; private set; }
+        public ICampaignRepository Campaign { get; private set; }
+        public ICampaignItemRepository CampaignItem { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -27,6 +29,8 @@ namespace FluidFrame.DataAccess.Repository
             Company = new CompanyRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
             ShoppingCart = new ShoppingCartRepository(_db);
+            Campaign = new CampaignRepository(_db);
+            CampaignItem = new CampaignItemRepository(_db);
         }
 
         public void Save()
