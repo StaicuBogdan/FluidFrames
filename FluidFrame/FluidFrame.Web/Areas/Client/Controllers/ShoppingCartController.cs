@@ -1,5 +1,7 @@
 ﻿using FluidFrame.DataAccess.Repository.IRepository;
+using FluidFrame.Models;
 using FluidFrame.Models.ViewModels;
+using FluidFrame.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,12 +29,13 @@ namespace FluidFrame.Web.Areas.Client.Controllers
 
             ShoppingCartViewModel = new ShoppingCartViewModel()
             {
-                CartItemsList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Frame")
+                CartItemsList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Frame"),
+                Campaign = new()
             };
             foreach (var cart in ShoppingCartViewModel.CartItemsList)
             {
                 cart.Price = GetPriceBasedOnBookedPeriod(cart.Count, cart.Frame.Price, cart.Frame.Price7Days);
-                ShoppingCartViewModel.CartTotal += (cart.Price * cart.Count);
+                ShoppingCartViewModel.Campaign.CampaignTotal += (cart.Price * cart.Count);
             }
 
             return View(ShoppingCartViewModel);
@@ -40,7 +43,83 @@ namespace FluidFrame.Web.Areas.Client.Controllers
 
         public IActionResult Summary()
         {
-            return View();
+            // pentru metoda de Summary, facem cam la fel, cu acelasi model ca la Index 
+            // mai intai iau user-ul care este logat
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            // creez viewModelul cu lista de panouri publicitare rezervate si o campanie publicitara noua
+            ShoppingCartViewModel = new ShoppingCartViewModel()
+            {
+                CartItemsList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Frame"),
+                Campaign = new()
+            };
+
+            // adaug user-ul care face campania in viewModel
+            ShoppingCartViewModel.Campaign.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(
+                u => u.Id == claim.Value);
+
+            // adaug celelalte proprietati de la user si le pun si la campanie
+            ShoppingCartViewModel.Campaign.Name = ShoppingCartViewModel.Campaign.ApplicationUser.Name;
+            ShoppingCartViewModel.Campaign.Phone = ShoppingCartViewModel.Campaign.ApplicationUser.PhoneNumber;
+            ShoppingCartViewModel.Campaign.Street = ShoppingCartViewModel.Campaign.ApplicationUser.Street;
+            ShoppingCartViewModel.Campaign.City = ShoppingCartViewModel.Campaign.ApplicationUser.City;
+            ShoppingCartViewModel.Campaign.PostalCode = ShoppingCartViewModel.Campaign.ApplicationUser.PostalCode;
+
+            foreach (var cart in ShoppingCartViewModel.CartItemsList)
+            {
+                cart.Price = GetPriceBasedOnBookedPeriod(cart.Count, cart.Frame.Price, cart.Frame.Price7Days);
+                ShoppingCartViewModel.Campaign.CampaignTotal += (cart.Price * cart.Count);
+            }
+            return View(ShoppingCartViewModel);
+        }
+
+        //Daca nu o denumesc Summary, tre sa ii pun ActionName deasupra
+        [HttpPost]
+        [ActionName("Summary")]
+        [ValidateAntiForgeryToken]
+        public IActionResult SummaryPOST(ShoppingCartViewModel cartViewModel)
+        {
+            // iau user-ul logat
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            // iau toate panourile publicitare "adaugate in cos"
+            cartViewModel.CartItemsList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Frame");
+
+            cartViewModel.Campaign.PaymentStatus = StaticDetails.PaymentStatusPending;
+            cartViewModel.Campaign.CampaignStatus = StaticDetails.StatusPending;
+            cartViewModel.Campaign.StartDate = DateTime.Now;
+            
+            // todo: calculate last booked day from all the frames.
+            cartViewModel.Campaign.EndDate = DateTime.Now.AddDays(21);
+            cartViewModel.Campaign.ApplicationUserId = claim.Value;
+
+            foreach (var cart in cartViewModel.CartItemsList)
+            {
+                cart.Price = GetPriceBasedOnBookedPeriod(cart.Count, cart.Frame.Price, cart.Frame.Price7Days);
+                cartViewModel.Campaign.CampaignTotal += (cart.Price * cart.Count);
+            }
+
+            _unitOfWork.Campaign.Add(cartViewModel.Campaign);
+            _unitOfWork.Save();
+
+            foreach (var cart in cartViewModel.CartItemsList)
+            {
+                CampaignItem campaignItem = new()
+                {
+                    FrameId = cart.FrameId,
+                    CampaignId = cartViewModel.Campaign.Id,
+                    Price = cart.Price,
+                    DaysBooked = cart.Count
+                };
+                _unitOfWork.CampaignItem.Add(campaignItem);
+                _unitOfWork.Save();
+            }
+
+            _unitOfWork.ShoppingCart.RemoveRange(cartViewModel.CartItemsList);
+            _unitOfWork.Save();
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Plus(int cartId)

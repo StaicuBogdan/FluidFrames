@@ -19,6 +19,7 @@ namespace FluidFrame.Models
 
         public double CampaignTotal { get; set; }
 
+        public string? CampaignStatus { get; set; }
         public string? PaymentStatus { get; set; }
         public DateTime PaymentDate { get; set; }
         public DateTime PaymentDueDate { get; set; }

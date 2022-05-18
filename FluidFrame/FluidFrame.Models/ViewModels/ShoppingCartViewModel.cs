@@ -9,6 +9,6 @@ namespace FluidFrame.Models.ViewModels
     public class ShoppingCartViewModel
     {
         public IEnumerable<ShoppingCart> CartItemsList { get; set; }
-        public double CartTotal { get; set; }
+        public Campaign Campaign { get; set; }
     }
 }
