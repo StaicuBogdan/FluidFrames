@@ -1,4 +1,6 @@
-﻿<form method="post">
+﻿@model FluidFrame.Models.ViewModels.ShoppingCartViewModel
+
+<form method="post">
 	<br />
 	<div class="container">
 		<div class="card">
@@ -9,7 +11,7 @@
 						Campaign Summary
 					</div>
 					<div class="col-6 text-end">
-						<a class="btn btn-outline-info btn-sm">Back to Cart</a>
+						<a asp-action="Index" class="btn btn-outline-info btn-sm">Back to Cart</a>
 					</div>
 				</div>
 			</div>
@@ -19,7 +21,7 @@
 						<div class="col-12 col-lg-6 pb-4">
 							<div class="row">
 								<h4 class="d-flex justify-content-between align-items-center mb-3">
-									<span class="text-info">Shipping Details:</span>
+									<span class="text-info">Billing Details:</span>
 								</h4>
 							</div>
 							<div class="row my-1">
@@ -27,7 +29,8 @@
 									<label>Name</label>
 								</div>
 								<div class="col-9">
-									<input class="form-control" />
+									<input asp-for="Campaign.Name" class="form-control" />
+                                    <span asp-validation-for="Campaign.Name" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -35,7 +38,8 @@
 									<label>Phone</label>
 								</div>
 								<div class="col-9">
-									<input class="form-control" />
+									<input asp-for="Campaign.Phone" class="form-control" />
+                                    <span asp-validation-for="Campaign.Phone" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -43,7 +47,8 @@
 									<label>Street</label>
 								</div>
 								<div class="col-9">
-									<input class="form-control" />
+									<input asp-for="Campaign.Street" class="form-control" />
+                                    <span asp-validation-for="Campaign.Street" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -51,7 +56,8 @@
 									<label>City</label>
 								</div>
 								<div class="col-9">
-									<input class="form-control" />
+									<input asp-for="Campaign.City" class="form-control" />
+                                    <span asp-validation-for="Campaign.City" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="row my-1">
@@ -59,7 +65,8 @@
 									<label>Postal Code</label>
 								</div>
 								<div class="col-9">
-									<input class="form-control" />
+									<input asp-for="Campaign.PostalCode" class="form-control" />
+                                    <span asp-validation-for="Campaign.PostalCode" class="text-danger"></span>
 								</div>
 							</div>
 						</div>
@@ -69,18 +76,21 @@
 							</h4>
 							<ul class="list-group mb-3">
 
-								<li class="list-group-item d-flex justify-content-between">
-									<div>
-										<h6 class="my-0">Title</h6>
-										<small class="text-muted">Booked Days: Count</small>
-									</div>
-									<span class="text-muted">$$$ </span>
-								</li>
+								@foreach (var frameBooked in Model.CartItemsList)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="my-0">@frameBooked.Frame.ModelName</h6>
+                                            <small class="text-muted">Days Booked: @frameBooked.Count</small>
+                                        </div>
+                                        <span class="text-muted">@((frameBooked.Price * frameBooked.Count).ToString("c")) </span>
+                                    </li>
+                                }
 
-								<li class="list-group-item d-flex justify-content-between bg-light">
-									<small class="text-info">Total (USD)</small>
-									<strong class="text-info">$$$</strong>
-								</li>
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <small class="text-info">Total (USD)</small>
+                                    <strong class="text-info">@Model.Campaign.CampaignTotal.ToString("c")</strong>
+                                </li>
 							</ul>
 						</div>
 					</div>
@@ -88,11 +98,9 @@
 			</div>
 			<div class="card-footer">
 				<div class="row">
-					<div class="col-12 col-md-8 pt-2">
-						<p style="color:maroon; font-size:14px;">Estimate Arrival Date: </p>
-					</div>
+					<div class="col-md-8"></div>
 					<div class="col-12 col-md-4">
-						<button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+						<button type="submit" value="Start Campaign" class="btn btn-primary form-control">Start Campaign</button>
 					</div>
 				</div>
 			</div>

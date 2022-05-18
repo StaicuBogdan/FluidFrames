@@ -87,7 +87,7 @@ namespace FluidFrame.Web.Areas.Admin.Controllers
                         file.CopyTo(fileStreams);
                     }
 
-                    // save the image path in the Product model
+                    // save the image path in the Frame model
                     obj.Frame.ImageUrl = @"\images\frames\" + fileName + extension;
                 }
 
