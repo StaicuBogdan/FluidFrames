@@ -24,7 +24,7 @@ namespace FluidFrame.Web.Areas.Client.Controllers
 
         public IActionResult Index()
         {
-            // first get the identity of the user, vezi cine plm e
+            // first get the identity of the user, vezi cine e
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
