@@ -35,8 +35,15 @@
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Companies</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">New User</a>
 
                             </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Campaign" asp-action="Index">
+                                Campaigns
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Client" asp-controller="ShoppingCart" asp-action="Index">

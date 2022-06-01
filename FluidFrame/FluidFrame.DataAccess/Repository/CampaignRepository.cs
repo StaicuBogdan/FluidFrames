@@ -41,6 +41,7 @@ namespace FluidFrame.DataAccess.Repository
             var campaignFromDb = _db.Campaigns.FirstOrDefault(u => u.Id == id);
             campaignFromDb.SessionId = sessionId;
             campaignFromDb.PaymentIntentId = paymentIntentId;
+            campaignFromDb.PaymentDate = DateTime.Now;
         }
     }
 }

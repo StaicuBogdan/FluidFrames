@@ -14,7 +14,9 @@ namespace FluidFrame.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
 
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
 
         public double CampaignTotal { get; set; }

@@ -1,10 +1,13 @@
 ﻿using FluidFrame.DataAccess.Repository.IRepository;
 using FluidFrame.Models;
+using FluidFrame.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluidFrame.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = StaticDetails.Role_Admin)]
     public class CompanyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

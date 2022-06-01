@@ -21,6 +21,11 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages();
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "452387396717946";
+    options.AppSecret = "ec5f59a50a160f68d06dcebcbe2e25d2";
+});
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
