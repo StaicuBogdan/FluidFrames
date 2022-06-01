@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FluidFrame.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = StaticDetails.Role_Admin)]
     public class FrameTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
