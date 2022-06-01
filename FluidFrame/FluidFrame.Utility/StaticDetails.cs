@@ -18,8 +18,10 @@ namespace FluidFrame.Utility
 
         public const string StatusPending = "Pending";
         public const string StatusApproved = "Approved";
+
         public const string StatusInProcess = "InProcess";
-        public const string StatusCompleted = "Completed";
+        public const string StatusActive = "Active";
+
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
     }

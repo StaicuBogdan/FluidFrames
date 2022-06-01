@@ -6,8 +6,8 @@ $(document).ready(function () {
         loadDataTable("inprocess")
     }
     else {
-        if (url.includes("completed")) {
-            loadDataTable("completed")
+        if (url.includes("active")) {
+            loadDataTable("active")
         }
         else {
             if (url.includes("approved")) {
