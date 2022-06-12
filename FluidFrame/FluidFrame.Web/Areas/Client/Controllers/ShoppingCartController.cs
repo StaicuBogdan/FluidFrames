@@ -66,6 +66,16 @@ namespace FluidFrame.Web.Areas.Client.Controllers
             ShoppingCartViewModel.Campaign.Street = ShoppingCartViewModel.Campaign.ApplicationUser.Street;
             ShoppingCartViewModel.Campaign.City = ShoppingCartViewModel.Campaign.ApplicationUser.City;
             ShoppingCartViewModel.Campaign.PostalCode = ShoppingCartViewModel.Campaign.ApplicationUser.PostalCode;
+            ShoppingCartViewModel.Campaign.StartDate = DateTime.Now;
+
+            var campaignDurationInDays = 0;
+            foreach (var cart in ShoppingCartViewModel.CartItemsList)
+            {
+                if (cart.Count > campaignDurationInDays)
+                    campaignDurationInDays = cart.Count;
+            }
+
+            ShoppingCartViewModel.Campaign.EndDate = DateTime.Now.AddDays(campaignDurationInDays);
 
             foreach (var cart in ShoppingCartViewModel.CartItemsList)
             {

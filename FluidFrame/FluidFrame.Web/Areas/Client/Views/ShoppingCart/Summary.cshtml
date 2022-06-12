@@ -87,6 +87,17 @@
                                     </li>
                                 }
 
+								<li class="list-group-item d-flex justify-content-between bg-light">
+									<small class="text-info">Campaign Start Date: </small>
+									<input asp-for="Campaign.StartDate" class="form-control" hidden/>
+                                    <strong class="text-info">@Model.Campaign.StartDate.ToShortDateString()</strong>
+								</li>
+								<li class="list-group-item d-flex justify-content-between bg-light">
+									<small class="text-info">Campaign End Date: </small>
+									<input asp-for="Campaign.EndDate" class="form-control" hidden/>
+                                    <strong class="text-info">@Model.Campaign.EndDate.ToShortDateString()</strong>
+								</li>
+
                                 <li class="list-group-item d-flex justify-content-between bg-light">
                                     <small class="text-info">Total (USD)</small>
                                     <strong class="text-info">@Model.Campaign.CampaignTotal.ToString("c")</strong>
