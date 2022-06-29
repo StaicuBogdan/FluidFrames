@@ -129,7 +129,7 @@ namespace FluidFrame.Web.Areas.Client.Controllers
             }
 
             #region Stripe Settings
-            var domain = "https://localhost:44320/";
+            var domain = "https://localhost:7061/";
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>(),

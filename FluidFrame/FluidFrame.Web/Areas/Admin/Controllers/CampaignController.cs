@@ -4,6 +4,7 @@ using FluidFrame.Models.ViewModels;
 using FluidFrame.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Stripe;
 using System.Security.Claims;
 
@@ -58,11 +59,38 @@ namespace FluidFrame.Web.Areas.Admin.Controllers
         [HttpPost]
         [Authorize(Roles = StaticDetails.Role_Admin)]
         [ValidateAntiForgeryToken]
-        public IActionResult StartProcessing()
+        public async Task<IActionResult> StartProcessing()
         {
             _unitOfWork.Campaign.UpdateStatus(CampaignViewModel.Campaign.Id, StaticDetails.StatusInProcess);
             _unitOfWork.Save();
             TempData["success"] = "Campaign updated successfully.";
+
+            var api_key = "1ef9677a0b162641ee1daa1988395188";
+            // url variable composed of multiple variables
+            //var base_url = "http://api.openweathermap.org/data/2.5/weather?";
+            //latitude and longitude of Bucharest
+            var lat = "44";
+            var lon = "26";
+            //var complete_url = base_url + "lat=" + lat + "&lon=" + lon + "&appid=" + api_key;
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    client.BaseAddress = new Uri("http://api.openweathermap.org");
+                    var response = await client.GetAsync($"/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric");
+                    response.EnsureSuccessStatusCode();
+
+                    var stringResult = await response.Content.ReadAsStringAsync();
+                    var rawWeather = JsonConvert.DeserializeObject<OpenWeatherResponse>(stringResult);
+
+                    var temperature = rawWeather.Main.Temp;
+                }
+                catch (HttpRequestException httpRequestException)
+                {
+                    return BadRequest($"Error getting weather from OpenWeather: {httpRequestException.Message}");
+                }
+            }
             return RedirectToAction("Details", "Campaign", new { campaignId = CampaignViewModel.Campaign.Id });
         }
 
